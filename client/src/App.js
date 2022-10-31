@@ -1,5 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
+
+
+import { Provider } from 'react-redux';
+
+// Redux
+import store from "./stores/index";
+
+
 import Layout from "./components/Layout";
 import HomeComponent from "./components/home-component";
 import RegisterComponent from "./components/register-component";
@@ -13,7 +21,7 @@ import EnrollComponent from "./components/enroll-component";
 function App() {
   let [currentUser, setCurrentUser] = useState(AuthService.getCurrentUser());
   return (
-    <BrowserRouter>
+    <Provider store={store}>
       <Routes>
         <Route
           path="/"
@@ -70,7 +78,7 @@ function App() {
           />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </Provider>
   );
 }
 
