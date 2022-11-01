@@ -1,36 +1,64 @@
-import React, { useState } from "react";
+import React, { useState , useReducer} from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 
+// register reducer function
+import { registerReducer } from './register-reducer.js';
+
 const RegisterComponent = () => {
   const navigate = useNavigate();
-  let [username, setUsername] = useState("");
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [role, setRole] = useState("");
+  const successMessageWord = "Registration succeeds. You are now redirected to the login page.";
   let [message, setMessage] = useState("");
+  let [successMessage, setScMessage] = useState("");
+  
+  // useState function
+  // let [username, setUsername] = useState("");
+  // let [username, setUsername] = useState("");
+  // let [email, setEmail] = useState("");
+  // let [password, setPassword] = useState("");
+  // let [role, setRole] = useState("");
 
-  const handleUsername = (e) => {
-    setUsername(e.target.value);
+  // useReducer function
+  const initState = {
+    username: null,
+    email:null,
+    password: null,
+    role:null,
+  }
+  const [state, dispatch] = useReducer(registerReducer, initState)
+  
+  // useState function
+  // const handleChangeUsername = (e) => {
+  //   setUsername(e.target.value);
+  // };
+  // const handleChangeEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handleChangePassword = (e) => {
+  //   setPassword(e.target.value);
+  // };
+  // const handleChnageRole = (e) => {
+  //   setRole(e.target.value);
+  // };
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const changeValue = { name, value };
+    dispatch({ type: 'CHANGE_ITEM', changeValue: changeValue });
   };
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleRole = (e) => {
-    setRole(e.target.value);
-  };
+  
 
   const handleRegister = () => {
-    AuthService.register(username, email, password, role)
-      .then(() => {
-        window.alert("註冊成功。您現在將被導向到登入頁面");
+    dispatch({ type: 'REGISTER'});    
+    AuthService.register(state.username,state.email,state.password,state.role)
+      .then((data) => {
+        setScMessage(successMessageWord)
         navigate("/login");
       })
-      .catch((e) => {
-        setMessage(e.response.data);
+      .catch((error) => {
+        console.log(error.response);
+        setMessage(error.response.data);
       });
   };
 
@@ -38,10 +66,11 @@ const RegisterComponent = () => {
     <div style={{ padding: "3rem" }} className="col-md-12">
       <div>
         {message && <div className="alert alert-danger">{message}</div>}
+        {successMessage && <div className="alert alert-success">{successMessage}</div>}
         <div>
-          <label htmlFor="username">用戶名稱:</label>
+          <label htmlFor="username">Username</label>
           <input
-            onChange={handleUsername}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="username"
@@ -49,9 +78,9 @@ const RegisterComponent = () => {
         </div>
         <br />
         <div className="form-group">
-          <label htmlFor="email">電子信箱：</label>
+          <label htmlFor="email">email</label>
           <input
-            onChange={handleEmail}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="email"
@@ -59,29 +88,27 @@ const RegisterComponent = () => {
         </div>
         <br />
         <div className="form-group">
-          <label htmlFor="password">密碼：</label>
+          <label htmlFor="password">Password</label>
           <input
-            onChange={handlePassword}
+            onChange={handleChange}
             type="password"
             className="form-control"
             name="password"
-            placeholder="長度至少超過6個英文或數字"
           />
         </div>
         <br />
         <div className="form-group">
-          <label htmlFor="password">身份：</label>
+          <label htmlFor="password">role</label>
           <input
-            onChange={handleRole}
+            onChange={handleChange}
             type="text"
             className="form-control"
-            placeholder="只能填入student或是instructor這兩個選項其一"
             name="role"
           />
         </div>
         <br />
         <button onClick={handleRegister} className="btn btn-primary">
-          <span>註冊會員</span>
+          <span>Register</span>
         </button>
       </div>
     </div>

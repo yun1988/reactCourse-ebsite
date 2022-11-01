@@ -31,6 +31,7 @@ function App() {
 
   useEffect(() => {
     // reload redux Ｆ5 會回預設值 所以重抓
+    // 問題 useSelector 不能寫在 useEffect 裡面 也不能寫在普通function裏面 要怎麼寫比較好
     console.log ('5')
     const returnData = AuthService.getCurrentUser();
     dispatch(setUserInfo(returnData));

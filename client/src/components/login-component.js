@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 
@@ -8,29 +8,49 @@ import {
   setUserInfo
 } from '../stores/slice/user';
 
+// register reducer function
+import { loginReducer } from './login-reducer.js';
+
+
 const LoginComponent = ({ currentUser, setCurrentUser }) => {
-  const dispatch = useDispatch();
+  const dispatchA = useDispatch();
   const nagivate = useNavigate();
-  let [email, setEmail] = useState("");
-  let [password, setPassword] = useState("");
+  // let { currentUser, setCurrentUser } = props;
+  let [successMessage, setScMessage] = useState("");
+  let loginSuccessMessage = "Login successfully, you are now redirected to the profile page."
   let [message, setMessage] = useState("");
 
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
+  //useState function
+  // const handleEmail = (e) => {
+  //   setEmail(e.target.value);
+  // };
+  // const handlePassword = (e) => {
+  //   setPassword(e.target.value);
+  // };
+
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const changeValue = { name, value };
+    dispatch({ type: 'CHANGE_ITEM', changeValue: changeValue });
   };
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
+
+  // useReducer initState
+  const initState = {
+    email: null,
+    password:null
+  }
+  const [state, dispatch] = useReducer(loginReducer, initState)
 
   const handleLogin = async () => {
     try {
-      let response = await AuthService.login(email, password);
+      let response = await AuthService.login(state.email, state.password);
       localStorage.setItem("user", JSON.stringify(response.data));
       window.alert("登入成功。您現在將被重新導向到個人資料頁面。");
       setCurrentUser(AuthService.getCurrentUser());
       let data = AuthService.getCurrentUser()
       console.log ('1',data)
-      dispatch(setUserInfo(data))
+      dispatchA(setUserInfo(data))
       nagivate("/profile");
     } catch (e) {
       setMessage(e.response.data);
@@ -44,7 +64,7 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
         <div className="form-group">
           <label htmlFor="username">電子信箱：</label>
           <input
-            onChange={handleEmail}
+            onChange={handleChange}
             type="text"
             className="form-control"
             name="email"
@@ -54,7 +74,7 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
         <div className="form-group">
           <label htmlFor="password">密碼：</label>
           <input
-            onChange={handlePassword}
+            onChange={handleChange}
             type="password"
             className="form-control"
             name="password"
