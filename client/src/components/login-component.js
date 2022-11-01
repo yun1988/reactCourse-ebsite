@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
 
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  cleanUser, 
+  setUserInfo
+} from '../stores/slice/user';
+
 const LoginComponent = ({ currentUser, setCurrentUser }) => {
+  const dispatch = useDispatch();
   const nagivate = useNavigate();
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
@@ -21,6 +28,9 @@ const LoginComponent = ({ currentUser, setCurrentUser }) => {
       localStorage.setItem("user", JSON.stringify(response.data));
       window.alert("登入成功。您現在將被重新導向到個人資料頁面。");
       setCurrentUser(AuthService.getCurrentUser());
+      let data = AuthService.getCurrentUser()
+      console.log ('1',data)
+      dispatch(setUserInfo(data))
       nagivate("/profile");
     } catch (e) {
       setMessage(e.response.data);

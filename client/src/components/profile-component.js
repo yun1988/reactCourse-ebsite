@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import AuthService from "../services/auth.service";
+import { useSelector, useDispatch } from 'react-redux';
 
 const ProfileComponent = ({ currentUser, setCurrentUser }) => {
+  const data = useSelector(state => state);
+  console.log ('data',data)
+
   return (
     <div style={{ padding: "3rem" }}>
       {!currentUser && <div>在獲取您的個人資料之前，您必須先登錄。</div>}

@@ -1,10 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './slice/user';
 
 const store = configureStore({
   reducer: {
-    // publicKey: publicKeySlice.reducer,
-    // serverSetting: serverSettingSlice.reducer,
-    // user: userSlice.reducer
+    user: userReducer
   }
 });
 
