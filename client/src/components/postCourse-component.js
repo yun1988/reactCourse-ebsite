@@ -1,28 +1,50 @@
-import React, { useState } from "react";
+import React, { useState ,useReducer} from "react";
 import { useNavigate } from "react-router-dom";
 import CourseService from "../services/course.service";
 
+// register reducer function
+import { postCourseReducer } from './postCourse-reducer.js';
+
 const PostCourseComponent = (props) => {
   let { currentUser, setCurrentUser } = props;
-  let [title, setTitle] = useState("");
-  let [description, setDescription] = useState("");
-  let [price, setPrice] = useState(0);
   let [message, setMessage] = useState("");
   const navigate = useNavigate();
+
+  // let [title, setTitle] = useState("");
+  // let [description, setDescription] = useState("");
+  // let [price, setPrice] = useState(0);
+
+   // useReducer initState
+   const initState = {
+    title: null,
+    description : '',
+    price: 0
+  }
+  const [state, dispatch] = useReducer(postCourseReducer, initState)
+
+
   const handleTakeToLogin = () => {
     navigate("/login");
   };
-  const handleChangeTitle = (e) => {
-    setTitle(e.target.value);
+    // const handleChangeTitle = (e) => {
+    //   setTitle(e.target.value);
+    // };
+    // const handleChangeDesciption = (e) => {
+    //   setDescription(e.target.value);
+    // };
+    // const handleChangePrice = (e) => {
+    //   setPrice(e.target.value);
+    // };
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    const changeValue = { name, value };
+    dispatch({ type: 'CHANGE_ITEM', changeValue: changeValue });
   };
-  const handleChangeDesciption = (e) => {
-    setDescription(e.target.value);
-  };
-  const handleChangePrice = (e) => {
-    setPrice(e.target.value);
-  };
+
   const postCourse = () => {
-    CourseService.post(title, description, price)
+    dispatch({ type: 'POSTCOURSE'}); 
+    CourseService.post(state.title, state.description, state.price)
       .then(() => {
         window.alert("新課程已創建成功");
         navigate("/course");
@@ -59,7 +81,7 @@ const PostCourseComponent = (props) => {
             type="text"
             className="form-control"
             id="exampleforTitle"
-            onChange={handleChangeTitle}
+            onChange={handleChange}
           />
           <br />
           <label for="exampleforContent">內容：</label>
@@ -67,8 +89,8 @@ const PostCourseComponent = (props) => {
             className="form-control"
             id="exampleforContent"
             aria-describedby="emailHelp"
-            name="content"
-            onChange={handleChangeDesciption}
+            name="description"
+            onChange={handleChange}
           />
           <br />
           <label for="exampleforPrice">價格：</label>
@@ -77,7 +99,7 @@ const PostCourseComponent = (props) => {
             type="number"
             className="form-control"
             id="exampleforPrice"
-            onChange={handleChangePrice}
+            onChange={handleChange}
           />
           <br />
           <button className="btn btn-primary" onClick={postCourse}>
