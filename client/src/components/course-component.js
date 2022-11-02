@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 import CourseService from "../services/course.service";
 
 const CourseContext = React.createContext();
-// two components - Provider, Consumer
-
 
 const CourseComponent = ({ currentUser, setCurrentUser }) => {
   const navigate = useNavigate();
@@ -71,9 +69,6 @@ const CourseComponent = ({ currentUser, setCurrentUser }) => {
               <p style={{ margin: "0.5rem 0rem" }}>
                 課程價格: {price}
               </p>
-              <p>
-                id:{_id}
-              </p>
             </div>
           </div>
       </div>
@@ -110,6 +105,7 @@ const CourseComponent = ({ currentUser, setCurrentUser }) => {
       )}
     </div>
   );
+
 };
 
 
