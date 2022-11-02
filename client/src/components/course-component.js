@@ -39,6 +39,47 @@ const CourseComponent = ({ currentUser, setCurrentUser }) => {
     }
   }, []);
 
+  const List = () => {
+    const mainData = useContext(CourseContext);
+    console.log(mainData);
+    return (
+      <div>
+        {mainData.courseData.map((course) => {
+          console.log('course',course)
+          return (
+            <ListItem {...course}/>
+            );
+          })}
+      </div>
+    );
+  };
+
+  const ListItem = ({ _id ,title, description ,students ,price}) => {
+    const mainData = useContext(CourseContext);
+    console.log('2',mainData);
+    return (
+      <div style={{ display: "flex", flexWrap: "wrap" , float: "left"}}>
+        <div key={_id} className="card" style={{ width: "18rem", margin: "1rem"}}>
+          <div className="card-body">
+            <h5 className="card-title">課程名稱:{title}</h5>
+              <p style={{ margin: "0.5rem 0rem" }} className="card-text">
+                {description}
+              </p>
+              <p style={{ margin: "0.5rem 0rem" }}>
+                學生人數: {students.length}
+              </p>
+              <p style={{ margin: "0.5rem 0rem" }}>
+                課程價格: {price}
+              </p>
+              <p>
+                id:{_id}
+              </p>
+            </div>
+          </div>
+      </div>
+    );
+  };
+
   return (
     <div style={{ padding: "3rem" }}>
       {!currentUser && (
@@ -71,54 +112,11 @@ const CourseComponent = ({ currentUser, setCurrentUser }) => {
   );
 };
 
-const List = () => {
-  const mainData = useContext(CourseContext);
-  console.log('mainData',mainData);
-  return (
-    <div style={{ display: "flex", flexWrap: "wrap" }}>
-      {mainData.courseData.map((course) => {
-        return(
-          <div key={course.id} className="card" style={{ width: "18rem", margin: "1rem"}}>
-            <div className="card-body">
-              <h5 className="card-title">課程名稱:{course.title}</h5>
-              <p style={{ margin: "0.5rem 0rem" }} className="card-text">
-                {course.description}
-              </p>
-              <p style={{ margin: "0.5rem 0rem" }}>
-                學生人數: {course.students.length}
-              </p>
-              <p style={{ margin: "0.5rem 0rem" }}>
-                課程價格: {course.price}
-              </p>
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  );
-};
 
-// const SingleCourse = ({ id, course }) => {
-//   // const { removePerson } = useContext(CourseContext);
-//   console.log ('course666',course)
-//   // const item = useContext(CourseContext);
-//   return (
-//     <div key={id} className="card" style={{ width: "18rem", margin: "1rem" }}>
-//       <div className="card-body">
-//         <h5 className="card-title">課程名稱:{course.title}</h5>
-//         <p style={{ margin: "0.5rem 0rem" }} className="card-text">
-//           {course.description}
-//         </p>
-//         <p style={{ margin: "0.5rem 0rem" }}>
-//           學生人數: {course.students.length}
-//         </p>
-//         <p style={{ margin: "0.5rem 0rem" }}>
-//           課程價格: {course.price}
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
+
+
+
+
 
 
 export default CourseComponent;
