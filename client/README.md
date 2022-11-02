@@ -72,3 +72,4 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ###  `nodemon .\index.js`
 open server
+db 要先開權限 不然api會拿不到資料
